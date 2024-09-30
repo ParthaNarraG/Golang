@@ -1,0 +1,28 @@
+Commands that were used to run this go program
+
+1. go init <ENTER YOUR PROGRAM NAME> - Works like package.json
+2. go fmt ./... - Format your code
+3. go build - This will create an exe file with your program name
+4. go build -o <ENTER NAME> - This will create an exe file with another name
+5. go vet - This will identify syntactically valid, but quite incorrect details in your program
+6. go clean - This command will clear the exe file(binary file) created after build.
+7. go run <ENTER NAME> - This will run your go program
+
+
+
+
+
+
+
+
+
+Documentation Links:
+To install Chocolatey
+https://www.youtube.com/watch?v=-5WLKu_J_AE
+
+choco install make - This will install make in windows
+
+After this restart your vs code
+
+To Learn about  Variables 
+https://www.digitalocean.com/community/tutorials/how-to-use-variables-and-constants-in-go
