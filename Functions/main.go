@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"sort"
+	"strconv"
 )
 
 // Declaring a struct
@@ -51,6 +53,66 @@ func main() {
 	// By default the value of this function is "nil"
 	var funcVar func(string)
 	fmt.Println("When no function were assigned to the variable", funcVar)
+
+	//We are binding the functions to the map
+	var vals = map[string]func(int, int) int{
+		"+": addvalue,
+		"-": subvalue,
+		"*": multiplyvalue,
+		"/": dividevalue,
+	}
+
+	//This expressions consist of map of map of strings
+	expressions := [][]string{
+		{"2", "+", "3"},
+		{"2", "-", "3"},
+		{"2", "*", "3"},
+		{"2", "/", "3"},
+		{"2", "%", "3"},
+		{"two", "+", "three"},
+		{"5"},
+	}
+
+	for _, expression := range expressions {
+		if len(expression) != 3 {
+			fmt.Println("Invalid expression Syntax", expression)
+			continue
+		}
+		// Convert the first character
+		p1, err := strconv.Atoi(expression[0])
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		// Checking if the value exists in the map
+		_, ok := vals[expression[1]]
+		if !ok {
+			fmt.Println("This is an invalid operator", expression)
+			continue
+		}
+		// Convert the second character
+		p2, err := strconv.Atoi(expression[2])
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		// Calling the function by passing the parameters
+		fmt.Println(expression[1], vals[expression[1]](p1, p2))
+	}
+
+	// We can also declare the function using type
+	// This practice is good for readability and documentation
+	type opFunc func(int, int) int
+	var newMaps = map[string]opFunc{}
+	fmt.Println("newMaps", newMaps)
+
+	anonymousFunctions()
+	printDummyMsgForClosure()
+	// Pass function as parameter
+	sorting()
+	// Return function as output
+	retFunc := returnFunctions
+	fmt.Println(retFunc()())
 }
 
 // Function with return type
@@ -118,4 +180,88 @@ func blankReturns(numerator int, denominator int) (result int, remainder int, er
 
 func printRandomMessage(msg string) int {
 	return len(msg)
+}
+
+// Calculator functions
+func addvalue(a, b int) int {
+	return a + b
+}
+
+func subvalue(a, b int) int {
+	return a - b
+}
+
+func multiplyvalue(a, b int) int {
+	return a * b
+}
+
+func dividevalue(a, b int) int {
+	return a / b
+}
+
+func anonymousFunctions() {
+	// Inner functions are called anonymous functions
+	newFunc := func(i int, j int) int { return i + j }
+	for i := 0; i < 5; i++ {
+		fmt.Println("Anonymous", newFunc(i, i+1))
+	}
+	anonymousFunctions1()
+}
+
+func anonymousFunctions1() {
+	for i := 0; i < 5; i++ {
+		// We haven't declared any name and this works just like IIFE in javascript
+		// Not the ideal case, but just showing how it works
+		func(j int) {
+			fmt.Println("AnonymousFunctions1", i)
+		}(i)
+	}
+}
+
+// Closures the inner function has the ability to modify the resources of the outer function
+func printDummyMsgForClosure() {
+	var msg string = "Hello World!"
+	func() {
+		msg = "No, this is an old message!"
+	}()
+	fmt.Println("Message", msg)
+}
+
+// We can pass functions as a parameter to another functions
+func sorting() {
+
+	type person struct {
+		name     string
+		sur_name string
+		age      int
+	}
+
+	var newSlice = make([]person, 0, 10)
+
+	newSlice = append(newSlice, person{
+		name:     "Partha",
+		sur_name: "narra",
+		age:      28,
+	})
+
+	newSlice = append(newSlice, person{
+		name:     "chinnu",
+		sur_name: "narra",
+	})
+
+	// Passing a function as a parameter to another functions
+	// This can also be called higher order functions
+	sort.Slice(newSlice, func(i, j int) bool {
+		return newSlice[i].name > newSlice[j].name
+	})
+
+	fmt.Println("Sorting", newSlice)
+
+}
+
+// Similarly we can return the functions from a function
+func returnFunctions() func() bool {
+	return func() bool {
+		return true
+	}
 }
