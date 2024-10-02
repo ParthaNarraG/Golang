@@ -113,6 +113,8 @@ func main() {
 	// Return function as output
 	retFunc := returnFunctions
 	fmt.Println(retFunc()())
+
+	deferFunc()
 }
 
 // Function with return type
@@ -264,4 +266,35 @@ func returnFunctions() func() bool {
 	return func() bool {
 		return true
 	}
+}
+
+// Defer statements
+// Ḍefer statements is mostly used for resource cleanup like closing the files,network connections
+// Defer statements execute at the last stage of the program consider it as not putting await in javascript
+// Defer will follow stack principle, the last inserted defer statement will execute first
+
+func deferFunc() {
+	defer fmt.Println("World")
+	fmt.Println("Hello")
+	deferLoop()
+}
+
+func deferLoop() {
+	for i := 0; i < 5; i++ {
+		defer fmt.Println(i)
+	}
+	var newSlice = []int{1, 2, 3, 4, 5}
+	var slices = newSlice[:2]
+	fmt.Println(slices)
+	newLoop(slices)
+	fmt.Println("newSlice", newSlice)
+}
+
+// Go is call by value
+// When you pass a variable for parameter to a function, go will create a copy of that variable and whatever changes done to that variable will not
+// impact the original variable
+// But maps & slices were different, cause they deal in pointers
+func newLoop(slices []int) []int {
+	slices[0] = 99
+	return slices
 }
